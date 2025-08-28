@@ -1,5 +1,6 @@
-package com.example.demo.dto;
+package com.example.demo.dto.room;
 
+import jakarta.validation.constraints.*;
 import lombok.*;
 
 @Getter
@@ -7,16 +8,15 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoomResponse {
-    private String createdById;
-    private String updatedById;
-    private String deletedById;
-    private String createdDate;
-    private String updateDate;
-    private String id;
+public class RoomCreateRequest {
+    @NotBlank
     private String roomCode;
+    @NotBlank
     private String roomName;
+    @Min(1)
     private Integer roomCapacity;
+    ///kalau min1 berart
+
     private String roomType;
     private String picUrl;
     private String picFileName;

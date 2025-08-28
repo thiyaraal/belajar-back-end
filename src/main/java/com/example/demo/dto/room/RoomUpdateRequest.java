@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.room;
 
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -8,7 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoomCreateRequest {
+public class RoomUpdateRequest {
+
     @NotBlank
     private String roomCode;
     @NotBlank
@@ -27,4 +28,5 @@ public class RoomCreateRequest {
     private String calendarId;
     private String passcode;
     private String inUsed;
+
 }

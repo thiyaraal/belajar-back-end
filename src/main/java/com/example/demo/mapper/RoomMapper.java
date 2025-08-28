@@ -2,8 +2,8 @@ package com.example.demo.mapper;
 
 import java.time.format.DateTimeFormatter;
 
-import com.example.demo.dto.RoomResponse;
-import com.example.demo.entity.RoomEntity;
+import com.example.demo.dto.room.RoomResponse;
+import com.example.demo.entity.room.RoomEntity;
 
 public class RoomMapper {
 

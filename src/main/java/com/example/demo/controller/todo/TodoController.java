@@ -1,9 +1,8 @@
-package com.example.demo.controller;
-import com.example.demo.entity.Todos;
-import java.time.LocalDate;
+package com.example.demo.controller.todo;
 import org.springframework.web.bind.annotation.*;
-import jakarta.validation.constraints.*;
 import java.util.List;
+
+import com.example.demo.entity.todo.Todos;
 import com.example.demo.repository.TodoRepository;
 
 @RestController

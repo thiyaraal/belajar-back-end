@@ -1,23 +1,29 @@
-package com.example.demo.dto;
+package com.example.demo.entity.room;
 
-import jakarta.validation.constraints.*;
-import lombok.*;
+import com.example.demo.entity.BaseEntity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+
+@Entity
+@Table(name = "rooms")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RoomUpdateRequest {
 
-    @NotBlank
+public class RoomEntity extends BaseEntity {
+
     private String roomCode;
-    @NotBlank
     private String roomName;
-    @Min(1)
-    private Integer roomCapacity;
-
     private String roomType;
+    private Integer roomCapacity;
     private String picUrl;
     private String picFileName;
     private String roomColorTag;

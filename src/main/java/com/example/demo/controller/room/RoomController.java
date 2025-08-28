@@ -1,16 +1,14 @@
-package com.example.demo.controller;
+package com.example.demo.controller.room;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-import static org.springframework.http.HttpStatus.NOT_FOUND;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.example.demo.api.ApiResponse;
-import com.example.demo.dto.RoomCreateRequest;
-import com.example.demo.dto.RoomResponse;
-import com.example.demo.dto.RoomUpdateRequest;
-import com.example.demo.entity.RoomEntity;
+import com.example.demo.dto.room.RoomCreateRequest;
+import com.example.demo.dto.room.RoomResponse;
+import com.example.demo.dto.room.RoomUpdateRequest;
+import com.example.demo.entity.room.RoomEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.RoomMapper;
 import com.example.demo.repository.RoomRepository;
@@ -77,7 +75,7 @@ public class RoomController {
         var body = RoomMapper.toResponse(saved);
 
         return ResponseEntity
-                .created(uri.path("/rooms/{id}").build(saved.getId()))
+                .created(uri.path("/rooms/{id}").buildAndExpand(saved.getId()).toUri())
                 .body(ApiResponse.created("Room successfully added", body));
     }
 

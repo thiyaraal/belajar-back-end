@@ -1,27 +1,23 @@
-package com.example.demo.entity;
+package com.example.demo.dto.room;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
-@Entity
-@Table(name = "rooms")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
-public class RoomEntity extends BaseEntity {
-
+public class RoomResponse {
+    private String createdById;
+    private String updatedById;
+    private String deletedById;
+    private String createdDate;
+    private String updateDate;
+    private String id;
     private String roomCode;
     private String roomName;
-    private String roomType;
     private Integer roomCapacity;
+    private String roomType;
     private String picUrl;
     private String picFileName;
     private String roomColorTag;
@@ -32,5 +28,4 @@ public class RoomEntity extends BaseEntity {
     private String calendarId;
     private String passcode;
     private String inUsed;
-
 }

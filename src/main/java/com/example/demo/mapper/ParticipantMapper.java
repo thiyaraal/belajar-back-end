@@ -1,7 +1,7 @@
 package com.example.demo.mapper;
 
 import com.example.demo.dto.participant.ParticipantResponse;
-import com.example.demo.entity.participant.ParticipantEntity;
+import com.example.demo.entity.ParticipantEntity;
 
 import java.time.format.DateTimeFormatter;
 

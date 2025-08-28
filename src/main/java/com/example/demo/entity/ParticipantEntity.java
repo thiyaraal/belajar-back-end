@@ -1,6 +1,4 @@
-package com.example.demo.entity.participant;
-
-import com.example.demo.entity.BaseEntity;
+package com.example.demo.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;

@@ -1,9 +1,9 @@
-package com.example.demo.controller.participant;
+package com.example.demo.controller;
 
 import com.example.demo.api.ApiResponse;
 import com.example.demo.dto.participant.ParticipantCreateRequest;
 import com.example.demo.dto.participant.ParticipantResponse;
-import com.example.demo.entity.participant.ParticipantEntity;
+import com.example.demo.entity.ParticipantEntity;
 import com.example.demo.mapper.ParticipantMapper;
 import com.example.demo.repository.ParticipantRepository;
 

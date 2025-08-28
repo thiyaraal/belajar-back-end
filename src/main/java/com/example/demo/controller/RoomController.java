@@ -1,37 +1,37 @@
-package com.example.demo.controller.room;
+package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.example.demo.api.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
-import com.example.demo.entity.room.RoomEntity;
+import com.example.demo.entity.RoomEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.RoomMapper;
 import com.example.demo.repository.RoomRepository;
+import com.example.demo.service.PasscodeService;
 
 import jakarta.validation.Valid;
-
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
     private final RoomRepository roomRepository;
+    private final PasscodeService passcodeService;
 
-    public RoomController(RoomRepository roomRepository) {
+    public RoomController(RoomRepository roomRepository, PasscodeService passcodeService) {
         this.roomRepository = roomRepository;
+        this.passcodeService = passcodeService;
     }
 
     @GetMapping("/find-all-rooms")
@@ -67,11 +67,15 @@ public class RoomController {
                 .roomDimension(req.getRoomDimension())
                 .roomDuration(req.getRoomDuration())
                 .calendarId(req.getCalendarId())
-                .passcode(req.getPasscode())
+
                 .inUsed(req.getInUsed())
                 .build();
 
+        String passcode = passcodeService.generateUnique();
+        e.setPasscode(passcode);
+
         RoomEntity saved = roomRepository.save(e);
+
         var body = RoomMapper.toResponse(saved);
 
         return ResponseEntity
@@ -85,22 +89,25 @@ public class RoomController {
         RoomEntity room = roomRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Room not found: " + id));
 
-        room.setRoomName(payload.getRoomName());
         room.setRoomCode(payload.getRoomCode());
-        room.setRoomType(payload.getRoomType());
+        room.setRoomName(payload.getRoomName());
         room.setRoomCapacity(payload.getRoomCapacity());
+        room.setRoomType(payload.getRoomType());
         room.setPicUrl(payload.getPicUrl());
         room.setPicFileName(payload.getPicFileName());
         room.setRoomColorTag(payload.getRoomColorTag());
         room.setActiveRoom(payload.getActiveRoom());
         room.setRoomLocation(payload.getRoomLocation());
         room.setRoomDimension(payload.getRoomDimension());
+        room.setRoomDuration(payload.getRoomDuration());
         room.setCalendarId(payload.getCalendarId());
+        room.setPasscode(payload.getPasscode());
         room.setInUsed(payload.getInUsed());
-        RoomEntity saved = roomRepository.save(room);
-        RoomResponse body = RoomMapper.toResponse(saved);
 
-        return ResponseEntity.ok(ApiResponse.ok("Room successfully updated", body));
+        RoomEntity saved = roomRepository.save(room);
+        return ResponseEntity
+                .ok(ApiResponse.ok("Room successfully updated", RoomMapper.toResponse(saved)));
+    
 
     }
 

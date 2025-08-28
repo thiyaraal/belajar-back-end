@@ -1,9 +1,9 @@
-package com.example.demo.entity.room;
+package com.example.demo.entity;
 
-import com.example.demo.entity.BaseEntity;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 
 @Entity
-@Table(name = "rooms")
+@Table(name = "rooms", uniqueConstraints = @UniqueConstraint(name = "uk_rooms_passcode", columnNames = "passcode"))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,6 +32,7 @@ public class RoomEntity extends BaseEntity {
     private String roomDimension;
     private Integer roomDuration;
     private String calendarId;
+    @Column(nullable = false, length = 16)
     private String passcode;
     private String inUsed;
 

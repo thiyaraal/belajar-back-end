@@ -28,13 +28,14 @@ public class AuthController {
         RoomEntity room = roomRepository.findByPasscode(req.getPasscode())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
 
-        if (Boolean.TRUE.equals(room.getActiveRoom())) {
+        if (Boolean.TRUE.equals(room.getInUsed())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Room already active, cannot login again");
         }
 
         String token = UUID.randomUUID().toString().replace("-", "");
 
-        room.setActiveRoom(true);
+        room.setInUsed(true);
+        ;
         roomRepository.save(room);
 
         RoomResponse roomResp = RoomMapper.toResponse(room);
@@ -54,7 +55,7 @@ public class AuthController {
         var room = roomRepository.findByPasscode(req.getPasscode())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
 
-        if (Boolean.FALSE.equals(room.getActiveRoom())) {
+        if (Boolean.FALSE.equals(room.getInUsed())) {
             var roomResp = RoomMapper.toResponse(room);
             var payload = AuthLogoutResponse.builder()
                     .success(true)
@@ -64,10 +65,7 @@ public class AuthController {
             return ResponseEntity.ok(payload);
         }
 
-        room.setActiveRoom(false);
-
-        room.setInUsed("");
-
+        room.setInUsed(false);
         var saved = roomRepository.save(room);
         var roomResp = RoomMapper.toResponse(saved);
 

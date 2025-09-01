@@ -34,6 +34,6 @@ public class RoomEntity extends BaseEntity {
     private String calendarId;
     @Column(nullable = false, length = 16)
     private String passcode;
-    private String inUsed;
+    private Boolean inUsed;
 
 }

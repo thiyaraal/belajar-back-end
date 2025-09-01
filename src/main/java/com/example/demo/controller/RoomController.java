@@ -1,28 +1,22 @@
 package com.example.demo.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import org.springframework.web.util.UriComponentsBuilder;
 import com.example.demo.api.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
 import com.example.demo.dto.transaction.ReservationCreateRequest;
-import com.example.demo.dto.transaction.TransactionResponse;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.RoomMapper;
-import com.example.demo.mapper.TransactionMapper;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.PasscodeService;
 import com.example.demo.service.ReservationService;
 
 import jakarta.validation.Valid;
-
-import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -38,7 +32,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RoomController {
         private final RoomRepository roomRepository;
         private final PasscodeService passcodeService;
-        private final TransactionRepository transactionRepository;
         private final ReservationService reservationService;
 
         public RoomController(RoomRepository roomRepository,
@@ -47,7 +40,6 @@ public class RoomController {
                         ReservationService reservationService) {
                 this.roomRepository = roomRepository;
                 this.passcodeService = passcodeService;
-                this.transactionRepository = transactionRepository;
                 this.reservationService = reservationService;
 
         }
@@ -135,20 +127,5 @@ public class RoomController {
                 return ResponseEntity.ok(ApiResponse.ok("Reservation created", response));
         }
 
-        @GetMapping("/{roomId}/reservations")
-        public ResponseEntity<ApiResponse<List<TransactionResponse>>> listByDate(
-                        @PathVariable String roomId,
-                        @RequestParam LocalDate date) {
-
-                var room = roomRepository.findById(roomId)
-                                .orElseThrow(() -> new NotFoundException("Room not found with id: " + roomId));
-
-                var items = transactionRepository
-                                .findByRoom_IdAndBookingDateStartOrderByStartTimeAsc(room.getId(), date)
-                                .stream()
-                                .map(TransactionMapper::toResponse)
-                                .toList();
-
-                return ResponseEntity.ok(ApiResponse.ok("Reservations fetched", items));
-        }
+       
 }

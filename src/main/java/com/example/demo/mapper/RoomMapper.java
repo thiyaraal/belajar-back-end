@@ -33,6 +33,7 @@ public class RoomMapper {
                 .calendarId(e.getCalendarId())
                 .passcode(e.getPasscode())
                 .inUsed(e.getInUsed())
+        
                 .build();
     }
 

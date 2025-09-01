@@ -27,5 +27,5 @@ public class RoomUpdateRequest {
     private String roomDimension;
     private Integer roomDuration;
     private String calendarId;
-    private String inUsed;
+    private Boolean inUsed;
 }

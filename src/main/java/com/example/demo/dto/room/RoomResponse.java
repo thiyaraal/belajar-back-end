@@ -27,5 +27,5 @@ public class RoomResponse {
     private Integer roomDuration;
     private String calendarId;
     private String passcode;
-    private String inUsed;
+    private Boolean inUsed;
 }

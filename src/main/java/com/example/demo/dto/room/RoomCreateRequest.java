@@ -15,7 +15,6 @@ public class RoomCreateRequest {
     private String roomName;
     @Min(1)
     private Integer roomCapacity;
-    ///kalau min1 berart
 
     private String roomType;
     private String picUrl;
@@ -27,5 +26,5 @@ public class RoomCreateRequest {
     private Integer roomDuration;
     private String calendarId;
     private String passcode;
-    private String inUsed;
+    private Boolean inUsed;
 }

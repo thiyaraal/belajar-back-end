@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.auth.AuthLoginResponse;
+import com.example.demo.dto.auth.AuthLogoutResponse;
 import com.example.demo.dto.auth.AuthResult;
 import com.example.demo.dto.auth.PasscodeLoginRequest;
+import com.example.demo.dto.auth.PasscodeLogoutRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.mapper.RoomMapper;
@@ -45,6 +47,45 @@ public class AuthController {
                 .build();
 
         return ResponseEntity.ok(payload);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logoutByPasscode(@Valid @RequestBody PasscodeLogoutRequest req) {
+        var room = roomRepository.findByPasscode(req.getPasscode())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
+
+        if (Boolean.FALSE.equals(room.getActiveRoom())) {
+            var roomResp = RoomMapper.toResponse(room);
+            var payload = AuthLogoutResponse.builder()
+                    .success(true)
+                    .msg("Already logged out")
+                    .room(roomResp)
+                    .build();
+            return ResponseEntity.ok(payload);
+        }
+
+        room.setActiveRoom(false);
+
+        room.setInUsed("");
+
+        var saved = roomRepository.save(room);
+        var roomResp = RoomMapper.toResponse(saved);
+
+        var payload = AuthLogoutResponse.builder()
+                .success(true)
+                .msg("Logout successful")
+                .room(roomResp)
+                .build();
+
+        return ResponseEntity.ok(payload);
+    }
+
+    @GetMapping("/status/{passcode}")
+    public ResponseEntity<?> getStatus(@PathVariable String passcode) {
+        var room = roomRepository.findByPasscode(passcode)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room not found"));
+        var roomResp = RoomMapper.toResponse(room);
+        return ResponseEntity.ok(roomResp);
     }
 
 }

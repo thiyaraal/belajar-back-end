@@ -15,20 +15,16 @@ import lombok.*;
 @Builder
 public class TransactionEntity extends BaseEntity {
 
-    private String bookingCode;
     private LocalDate bookingDateStart;
     private LocalTime startTime;
     private LocalTime endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "room_id")
     private RoomEntity room;
-
-    private String roomCode;
-    private String roomName;
     private String meetingDesc;
     private String bookedBy;
     private String state;
     private String meetingType;
     private String participants;
-    private String eventId;
 }

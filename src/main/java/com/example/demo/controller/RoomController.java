@@ -7,7 +7,6 @@ import com.example.demo.api.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
-import com.example.demo.dto.transaction.ReservationCreateRequest;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.RoomMapper;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class RoomController {
         private final RoomRepository roomRepository;
         private final PasscodeService passcodeService;
-        private final ReservationService reservationService;
 
         public RoomController(RoomRepository roomRepository,
                         PasscodeService passcodeService,
@@ -40,7 +38,6 @@ public class RoomController {
                         ReservationService reservationService) {
                 this.roomRepository = roomRepository;
                 this.passcodeService = passcodeService;
-                this.reservationService = reservationService;
 
         }
 
@@ -118,14 +115,4 @@ public class RoomController {
                 return ResponseEntity.ok(ApiResponse.ok("Room successfully deleted", null));
         }
 
-        @PostMapping("/{roomId}/reservations")
-        public ResponseEntity<ApiResponse<Object>> reserve(
-                        @PathVariable String roomId,
-                        @Valid @RequestBody ReservationCreateRequest req) {
-
-                var response = reservationService.reserve(roomId, req);
-                return ResponseEntity.ok(ApiResponse.ok("Reservation created", response));
-        }
-
-       
 }

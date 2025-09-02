@@ -1,6 +1,7 @@
 package com.example.demo.mapper;
 
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Collectors;
 
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
@@ -33,7 +34,12 @@ public class RoomMapper {
                 .calendarId(e.getCalendarId())
                 .passcode(e.getPasscode())
                 .inUsed(e.getInUsed())
-        
+                .transactions(
+                        e.getTransactions() != null ? e.getTransactions().stream()
+                                .map(TransactionMapper::toResponse)
+                                .collect(Collectors.toList())
+                                : null)
+
                 .build();
     }
 

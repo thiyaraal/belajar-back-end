@@ -9,13 +9,14 @@ import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.mapper.RoomMapper;
 import com.example.demo.repository.RoomRepository;
+import com.example.demo.security.JwtUtil;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import jakarta.validation.Valid;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,8 +24,8 @@ import java.util.UUID;
 public class AuthController {
     private final RoomRepository roomRepository;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthLoginResponse> loginByPasscode(@Valid @RequestBody PasscodeLoginRequest req) {
+       @PostMapping("/login")
+    public ResponseEntity<AuthLoginResponse> login(@Valid @RequestBody PasscodeLoginRequest req) {
         RoomEntity room = roomRepository.findByPasscode(req.getPasscode())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
 
@@ -32,7 +33,7 @@ public class AuthController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Room already active, cannot login again");
         }
 
-        String token = UUID.randomUUID().toString().replace("-", "");
+        String token = JwtUtil.generateToken(room.getId());
 
         room.setInUsed(true);
         ;
@@ -49,6 +50,33 @@ public class AuthController {
 
         return ResponseEntity.ok(payload);
     }
+
+    // @PostMapping("/login")
+    // public ResponseEntity<AuthLoginResponse> loginByPasscode(@Valid @RequestBody PasscodeLoginRequest req) {
+    //     RoomEntity room = roomRepository.findByPasscode(req.getPasscode())
+    //             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
+
+    //     if (Boolean.TRUE.equals(room.getInUsed())) {
+    //         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Room already active, cannot login again");
+    //     }
+
+    //     String token = UUID.randomUUID().toString().replace("-", "");
+
+    //     room.setInUsed(true);
+    //     ;
+    //     roomRepository.save(room);
+
+    //     RoomResponse roomResp = RoomMapper.toResponse(room);
+
+    //     AuthLoginResponse payload = AuthLoginResponse.builder()
+    //             .success(true)
+    //             .msg("Authentication successful")
+    //             .token(token)
+    //             .result(AuthResult.builder().room(roomResp).build())
+    //             .build();
+
+    //     return ResponseEntity.ok(payload);
+    // }
 
     @PostMapping("/logout")
     public ResponseEntity<?> logoutByPasscode(@Valid @RequestBody PasscodeLogoutRequest req) {

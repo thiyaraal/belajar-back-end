@@ -28,4 +28,6 @@ public class RoomResponse {
     private String calendarId;
     private String passcode;
     private Boolean inUsed;
+    private Object transactions;
+
 }

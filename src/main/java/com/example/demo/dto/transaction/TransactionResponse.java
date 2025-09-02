@@ -14,25 +14,13 @@ public class TransactionResponse {
     private String updatedById;
     private OffsetDateTime createdDate;
     private OffsetDateTime updateDate;
-
     private String id;
-    private String bookingCode;
-
     private String bookingDateStart;
     private String bookingStart;
     private String bookingFinish;
-
-    private String roomCode;
     private String meetingDesc;
     private String bookedBy;
     private String state;
     private String meetingType;
     private String participants;
-
-    private String eventId;
-    private String strBookingDateStart;
-    private String strBookingStart;
-    private String strBookingFinish;
-    private String roomName;
-    private String strParticipants;
 }

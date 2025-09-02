@@ -6,10 +6,16 @@ import com.example.demo.entity.RoomEntity;
 
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface RoomRepository extends JpaRepository<RoomEntity, String> {
+
     boolean existsByPasscode(String passcode);
+
     Optional<RoomEntity> findByPasscode(String passcode);
+
+    @EntityGraph(attributePaths = "transactions")
+    Optional<RoomEntity> findWithTransactionsById(String id);
 }

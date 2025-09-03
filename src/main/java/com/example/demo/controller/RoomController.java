@@ -1,25 +1,20 @@
 package com.example.demo.controller;
-
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import com.example.demo.dto.common.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
+import com.example.demo.dto.room.RoomSimpleResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
-import com.example.demo.mapper.RoomMapper;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.PasscodeService;
 import com.example.demo.service.TransactionService;
 import com.example.demo.service.RoomService;
-
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,9 +40,9 @@ public class RoomController {
         }
 
         @GetMapping("/find-all")
-        public ResponseEntity<List<RoomResponse>> getAllRooms() {
-                List<RoomResponse> result = roomService.getAllRooms()
-                                .stream().map(RoomMapper::toResponse).toList();
+        public ResponseEntity<List<RoomSimpleResponse>> getAllRooms() {
+                List<RoomSimpleResponse> result = roomService.getAllRooms();
+
                 return ResponseEntity.ok(result);
         }
 

@@ -7,15 +7,11 @@ import com.example.demo.dto.participant.ParticipantSimpleResponse;
 import com.example.demo.dto.participant.ParticipantUpdateRequest;
 import com.example.demo.repository.ParticipantRepository;
 import com.example.demo.service.ParticipantService;
-
 import jakarta.validation.Valid;
-
 import java.net.URI;
 import java.util.List;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController

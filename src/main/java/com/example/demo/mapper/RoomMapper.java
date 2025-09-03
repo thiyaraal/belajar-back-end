@@ -4,6 +4,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 import com.example.demo.dto.room.RoomResponse;
+import com.example.demo.dto.room.RoomSimpleResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
 import com.example.demo.entity.RoomEntity;
 
@@ -11,35 +12,60 @@ public class RoomMapper {
 
     private static final DateTimeFormatter FMT = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    public static RoomResponse toResponse(RoomEntity e) {
+    public static RoomResponse toResponse(RoomEntity r) {
 
         return RoomResponse.builder()
-                .createdById(e.getCreatedById())
-                .updatedById(e.getUpdatedById())
+                .createdById(r.getCreatedById())
+                .updatedById(r.getUpdatedById())
                 .deletedById(null)
-                .createdDate(e.getCreatedDate() != null ? e.getCreatedDate().format(FMT) : null)
-                .updateDate(e.getUpdateDate() != null ? e.getUpdateDate().format(FMT) : null)
-                .id(e.getId())
-                .roomCode(e.getRoomCode())
-                .roomName(e.getRoomName())
-                .roomCapacity(e.getRoomCapacity())
-                .roomType(e.getRoomType())
-                .picUrl(e.getPicUrl())
-                .picFileName(e.getPicFileName())
-                .roomColorTag(e.getRoomColorTag())
-                .activeRoom(e.getActiveRoom())
-                .roomLocation(e.getRoomLocation())
-                .roomDimension(e.getRoomDimension())
-                .roomDuration(e.getRoomDuration())
-                .calendarId(e.getCalendarId())
-                .passcode(e.getPasscode())
-                .inUsed(e.getInUsed())
+                .createdDate(r.getCreatedDate() != null ? r.getCreatedDate().format(FMT) : null)
+                .updateDate(r.getUpdateDate() != null ? r.getUpdateDate().format(FMT) : null)
+                .id(r.getId())
+                .roomCode(r.getRoomCode())
+                .roomName(r.getRoomName())
+                .roomCapacity(r.getRoomCapacity())
+                .roomType(r.getRoomType())
+                .picUrl(r.getPicUrl())
+                .picFileName(r.getPicFileName())
+                .roomColorTag(r.getRoomColorTag())
+                .activeRoom(r.getActiveRoom())
+                .roomLocation(r.getRoomLocation())
+                .roomDimension(r.getRoomDimension())
+                .roomDuration(r.getRoomDuration())
+                .calendarId(r.getCalendarId())
+                .passcode(r.getPasscode())
+                .inUsed(r.getInUsed())
                 .transactions(
-                        e.getTransactions() != null ? e.getTransactions().stream()
-                                .map(TransactionMapper::toResponse)
+                        r.getTransactions() != null ? r.getTransactions().stream()
+                                .map(TransactionMapper::toSimpleResponse)
                                 .collect(Collectors.toList())
                                 : null)
 
+                .build();
+    }
+
+    public static RoomSimpleResponse toRoomSimpleResponse(RoomEntity r) {
+        return RoomSimpleResponse.builder()
+                .id(r.getId())
+                .roomCode(r.getRoomCode())
+                .roomName(r.getRoomName())
+                .roomCapacity(r.getRoomCapacity())
+                .roomType(r.getRoomType())
+                .picUrl(r.getPicUrl())
+                .picFileName(r.getPicFileName())
+                .roomColorTag(r.getRoomColorTag())
+                .activeRoom(r.getActiveRoom())
+                .roomLocation(r.getRoomLocation())
+                .roomDimension(r.getRoomDimension())
+                .roomDuration(r.getRoomDuration())
+                .calendarId(r.getCalendarId())
+                .passcode(r.getPasscode())
+                .inUsed(r.getInUsed())
+                .transactions(
+                        r.getTransactions() != null ? r.getTransactions().stream()
+                                .map(TransactionMapper::toSimpleResponse)
+                                .collect(Collectors.toList())
+                                : null)
                 .build();
     }
 

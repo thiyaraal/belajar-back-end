@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
+import com.example.demo.dto.room.RoomSimpleResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.mapper.RoomMapper;
@@ -22,8 +23,10 @@ public class RoomService {
     public final RoomRepository roomRepository;
     private final PasscodeService passcodeService;
 
-    public List<RoomEntity> getAllRooms() {
-        return roomRepository.findAll();
+    public List<RoomSimpleResponse> getAllRooms() {
+        return roomRepository.findAll().stream()
+                .map(RoomMapper::toRoomSimpleResponse)
+                .toList();
     }
 
     public RoomResponse getById(String id) {
@@ -54,7 +57,7 @@ public class RoomService {
         return RoomMapper.toResponse(saved);
     }
 
-    public RoomResponse updateRoom (String id, RoomUpdateRequest r) {
+    public RoomResponse updateRoom(String id, RoomUpdateRequest r) {
         RoomEntity room = roomRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room not found: " + id));
 
@@ -81,7 +84,5 @@ public class RoomService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room not found: " + id));
         roomRepository.delete(room);
     }
-
-
 
 }

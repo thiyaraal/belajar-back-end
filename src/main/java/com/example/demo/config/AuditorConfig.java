@@ -11,7 +11,7 @@ public class AuditorConfig {
 
     @Bean
     public AuditorAware<String> auditorAware() {
-        // default "System" -> nanti bisa diganti ambil username dari SecurityContext
+
         return () -> Optional.of("System");
     }
 }

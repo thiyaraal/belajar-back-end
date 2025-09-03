@@ -3,19 +3,21 @@ package com.example.demo.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
-import com.example.demo.api.ApiResponse;
+
+import com.example.demo.dto.common.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
-import com.example.demo.entity.RoomEntity;
-import com.example.demo.exception.NotFoundException;
 import com.example.demo.mapper.RoomMapper;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.TransactionRepository;
 import com.example.demo.service.PasscodeService;
-import com.example.demo.service.ReservationService;
+import com.example.demo.service.TransactionService;
+import com.example.demo.service.RoomService;
 
 import jakarta.validation.Valid;
+
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
@@ -29,89 +31,60 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RestController
 @RequestMapping("/rooms")
 public class RoomController {
-        private final RoomRepository roomRepository;
-        private final PasscodeService passcodeService;
+
+        private final RoomService roomService;
 
         public RoomController(RoomRepository roomRepository,
                         PasscodeService passcodeService,
                         TransactionRepository transactionRepository,
-                        ReservationService reservationService) {
-                this.roomRepository = roomRepository;
-                this.passcodeService = passcodeService;
+                        TransactionService reservationService,
+                        RoomService roomService) {
+
+                this.roomService = roomService;
 
         }
 
-        @GetMapping("/find-all-rooms")
+        @GetMapping("/find-all")
         public ResponseEntity<List<RoomResponse>> getAllRooms() {
-                List<RoomResponse> result = roomRepository.findAll()
+                List<RoomResponse> result = roomService.getAllRooms()
                                 .stream().map(RoomMapper::toResponse).toList();
                 return ResponseEntity.ok(result);
         }
 
         @GetMapping("/find-room/{id}")
         public ResponseEntity<ApiResponse<RoomResponse>> getRoomById(@PathVariable String id) {
-                var room = roomRepository.findById(id)
-                                .map(RoomMapper::toResponse)
-                                .orElseThrow(() -> new NotFoundException("Room not found with id: " + id));
+                RoomResponse room = roomService.getById(id);
                 return ResponseEntity.ok(ApiResponse.ok("Room found", room));
         }
 
         @PostMapping("/create-room")
-        public ResponseEntity<ApiResponse<RoomResponse>> create(
+        public ResponseEntity<ApiResponse<RoomResponse>> createRoom(
                         @Valid @RequestBody RoomCreateRequest req,
                         UriComponentsBuilder uri) {
 
-                RoomEntity e = RoomEntity.builder()
-                                .roomCode(req.getRoomCode())
-                                .roomName(req.getRoomName())
-                                .roomCapacity(req.getRoomCapacity())
-                                .roomType(req.getRoomType())
-                                .picUrl(req.getPicUrl())
-                                .picFileName(req.getPicFileName())
-                                .roomColorTag(req.getRoomColorTag())
-                                .activeRoom(req.getActiveRoom())
-                                .roomLocation(req.getRoomLocation())
-                                .roomDimension(req.getRoomDimension())
-                                .roomDuration(req.getRoomDuration())
-                                .calendarId(req.getCalendarId())
+                RoomResponse saved = roomService.createRoom(req);
 
-                                .inUsed(req.getInUsed())
-                                .build();
-
-                String passcode = passcodeService.generateUnique();
-                e.setPasscode(passcode);
-
-                RoomEntity saved = roomRepository.save(e);
-
-                var body = RoomMapper.toResponse(saved);
+                URI location = uri.path("/rooms/{id}")
+                                .buildAndExpand(saved.getId())
+                                .toUri();
 
                 return ResponseEntity
-                                .created(uri.path("/rooms/{id}").buildAndExpand(saved.getId()).toUri())
-                                .body(ApiResponse.created("Room successfully added", body));
+                                .created(location)
+                                .body(ApiResponse.created("Room successfully added", saved));
         }
 
         @PutMapping("/update-room/{id}")
         public ResponseEntity<ApiResponse<RoomResponse>> updateRoom(
                         @PathVariable String id,
-                        @Valid @RequestBody RoomUpdateRequest req) {
-
-                var entity = roomRepository.findById(id)
-                                .orElseThrow(() -> new NotFoundException("Room not found with id: " + id));
-
-                RoomMapper.applyUpdate(entity, req);
-
-                var saved = roomRepository.save(entity);
+                        @RequestBody RoomUpdateRequest r) {
 
                 return ResponseEntity.ok(
-                                ApiResponse.ok("Room successfully updated", RoomMapper.toResponse(saved)));
+                                ApiResponse.ok("Room successfully updated", roomService.updateRoom(id, r)));
         }
 
         @DeleteMapping("/delete-room/{id}")
         public ResponseEntity<ApiResponse<Void>> deleteRoom(@PathVariable String id) {
-                var room = roomRepository.findById(id)
-                                .orElseThrow(() -> new NotFoundException("Room not found with id: " + id));
-
-                roomRepository.delete(room);
+                roomService.deleteRoom(id);
                 return ResponseEntity.ok(ApiResponse.ok("Room successfully deleted", null));
         }
 

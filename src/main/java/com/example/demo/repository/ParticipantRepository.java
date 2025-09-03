@@ -8,4 +8,8 @@ import com.example.demo.entity.ParticipantEntity;
 
 @Repository
 public interface ParticipantRepository extends JpaRepository<ParticipantEntity, String> {
+
+
+
 }
+

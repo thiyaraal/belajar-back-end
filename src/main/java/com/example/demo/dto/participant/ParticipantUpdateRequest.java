@@ -8,13 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ParticipantUpdateResponse {
+public class ParticipantUpdateRequest {
     @NotBlank
     private String name;
     @NotBlank
     private String email;
     @NotBlank
-    private String phoneNumber;
+    private String handphone;
     @NotBlank
     private String companyCode;
 

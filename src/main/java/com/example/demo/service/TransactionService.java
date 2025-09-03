@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 
-public class ReservationService {
+public class TransactionService {
     private final RoomRepository roomRepository;
     private final TransactionRepository transactionRepository;
 
@@ -69,4 +69,17 @@ public class ReservationService {
         var saved = transactionRepository.save(tx);
         return TransactionMapper.toResponse(saved);
     }
+
+    public TransactionResponse getById(String id) {
+        TransactionEntity tx = transactionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found: " + id));
+        return TransactionMapper.toResponse(tx);
+    }
+
+    public void deleteById(String id) {
+        TransactionEntity tx = transactionRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found: " + id));
+        transactionRepository.delete(tx);
+    }
+
 }

@@ -15,7 +15,6 @@ public class RoomCreateRequest {
     private String roomName;
     @Min(1)
     private Integer roomCapacity;
-
     private String roomType;
     private String picUrl;
     private String picFileName;

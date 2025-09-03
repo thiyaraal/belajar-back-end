@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,13 +8,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.example.demo.api.ApiResponse;
+import com.example.demo.dto.common.ApiResponse;
 import com.example.demo.dto.transaction.ReservationCreateRequest;
+import com.example.demo.dto.transaction.TransactionResponse;
 import com.example.demo.repository.TransactionRepository;
-import com.example.demo.service.ReservationService;
-
+import com.example.demo.service.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -23,19 +20,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 @RequestMapping("/transactions")
 public class TransactionController {
 
-    private final TransactionRepository transactionRepository;
+    private final TransactionService reservationService;
 
-    private final ReservationService reservationService;
+    public TransactionController(TransactionRepository transactionRepository, TransactionService reservationService) {
 
-    public TransactionController(TransactionRepository transactionRepository, ReservationService reservationService) {
-        this.transactionRepository = transactionRepository;
         this.reservationService = reservationService;
     }
 
     @GetMapping("/{transactionId}")
     public ResponseEntity<ApiResponse<Object>> getTransactionById(@PathVariable String transactionId) {
-        var tx = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
+        TransactionResponse tx = reservationService.getById(transactionId);
         return ResponseEntity.ok(ApiResponse.ok("Transaction found", tx));
     }
 
@@ -52,10 +46,8 @@ public class TransactionController {
 
     @DeleteMapping("/{transactionId}")
     public ResponseEntity<ApiResponse<Object>> deleteTransaction(@PathVariable String transactionId) {
-        var tx = transactionRepository.findById(transactionId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
 
-        transactionRepository.delete(tx);
+        reservationService.deleteById(transactionId);
         return ResponseEntity.ok(ApiResponse.ok("Transaction deleted successfully", null));
     }
 

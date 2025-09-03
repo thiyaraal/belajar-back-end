@@ -14,7 +14,7 @@ public class ParticipantCreateRequest {
     @NotBlank
     private String email;
     @NotBlank
-    private String phoneNumber;
+    private String handPhone;
     @NotBlank
     private String companyCode;
 

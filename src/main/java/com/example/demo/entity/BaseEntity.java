@@ -48,6 +48,7 @@ public abstract class BaseEntity {
     @LastModifiedDate
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     private OffsetDateTime updateDate;
+    private String deletedById;
 
     @PrePersist
     void prePersist() {

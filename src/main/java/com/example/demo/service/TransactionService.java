@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 import com.example.demo.dto.transaction.ReservationCreateRequest;
 import com.example.demo.dto.transaction.TransactionResponse;
+import com.example.demo.dto.transaction.TransactionSimpleResponse;
 import com.example.demo.entity.RoomEntity;
 import com.example.demo.entity.TransactionEntity;
 import com.example.demo.exception.NotFoundException;
@@ -12,6 +13,8 @@ import com.example.demo.mapper.TransactionMapper;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.TransactionRepository;
 import java.time.Duration;
+import java.util.List;
+
 import com.example.demo.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 
@@ -80,6 +83,13 @@ public class TransactionService {
         TransactionEntity tx = transactionRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found: " + id));
         transactionRepository.delete(tx);
+    }
+
+    public List<TransactionSimpleResponse> getTodayTransactionsByRoomId(String roomId) {
+        return transactionRepository.findTodayTransactionsByRoomId(roomId)
+                .stream()
+                .map(TransactionMapper::toSimpleResponse)
+                .toList();
     }
 
 }

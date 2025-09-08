@@ -1,4 +1,5 @@
 package com.example.demo.controller;
+
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -6,6 +7,7 @@ import com.example.demo.dto.common.ApiResponse;
 import com.example.demo.dto.room.RoomCreateRequest;
 import com.example.demo.dto.room.RoomResponse;
 import com.example.demo.dto.room.RoomSimpleResponse;
+import com.example.demo.dto.room.RoomTodayResponse;
 import com.example.demo.dto.room.RoomUpdateRequest;
 import com.example.demo.repository.RoomRepository;
 import com.example.demo.repository.TransactionRepository;
@@ -50,6 +52,12 @@ public class RoomController {
         public ResponseEntity<ApiResponse<RoomResponse>> getRoomById(@PathVariable String id) {
                 RoomResponse room = roomService.getById(id);
                 return ResponseEntity.ok(ApiResponse.ok("Room found", room));
+        }
+
+        @GetMapping("/{id}/today")
+        public ResponseEntity<ApiResponse<RoomTodayResponse>> getRoomToday(@PathVariable String id) {
+                RoomTodayResponse data = roomService.getRoomWithTodayTransactions(id);
+                return ResponseEntity.ok(ApiResponse.ok("Room with today's transactions", data));
         }
 
         @PostMapping("/create-room")

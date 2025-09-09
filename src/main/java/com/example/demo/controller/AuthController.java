@@ -24,7 +24,7 @@ import jakarta.validation.Valid;
 public class AuthController {
     private final RoomRepository roomRepository;
 
-       @PostMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<AuthLoginResponse> login(@Valid @RequestBody PasscodeLoginRequest req) {
         RoomEntity room = roomRepository.findByPasscode(req.getPasscode())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
@@ -51,32 +51,7 @@ public class AuthController {
         return ResponseEntity.ok(payload);
     }
 
-    // @PostMapping("/login")
-    // public ResponseEntity<AuthLoginResponse> loginByPasscode(@Valid @RequestBody PasscodeLoginRequest req) {
-    //     RoomEntity room = roomRepository.findByPasscode(req.getPasscode())
-    //             .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid passcode"));
-
-    //     if (Boolean.TRUE.equals(room.getInUsed())) {
-    //         throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Room already active, cannot login again");
-    //     }
-
-    //     String token = UUID.randomUUID().toString().replace("-", "");
-
-    //     room.setInUsed(true);
-    //     ;
-    //     roomRepository.save(room);
-
-    //     RoomResponse roomResp = RoomMapper.toResponse(room);
-
-    //     AuthLoginResponse payload = AuthLoginResponse.builder()
-    //             .success(true)
-    //             .msg("Authentication successful")
-    //             .token(token)
-    //             .result(AuthResult.builder().room(roomResp).build())
-    //             .build();
-
-    //     return ResponseEntity.ok(payload);
-    // }
+    
 
     @PostMapping("/logout")
     public ResponseEntity<?> logoutByPasscode(@Valid @RequestBody PasscodeLogoutRequest req) {

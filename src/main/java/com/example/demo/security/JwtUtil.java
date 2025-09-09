@@ -7,15 +7,16 @@ import java.util.Date;
 import javax.crypto.SecretKey;
 
 public class JwtUtil {
-    private static final SecretKey SECRET_KEY = Keys
-            .hmacShaKeyFor("my-super-secret-key-which-should-be-long".getBytes());
-    private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24;
+    private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
+            "my-super-secret-key-which-should-be-long".getBytes());
+    private static final long EXPIRATION_MS = 1000L * 60 * 60 * 24;
 
     public static String generateToken(String roomId) {
+        long now = System.currentTimeMillis();
         return Jwts.builder()
                 .setSubject(roomId)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 86400000 + EXPIRATION_MS))
+                .setIssuedAt(new Date(now))
+                .setExpiration(new Date(now + EXPIRATION_MS))
                 .signWith(SECRET_KEY)
                 .compact();
     }

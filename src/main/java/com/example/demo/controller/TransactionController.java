@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -36,11 +35,8 @@ public class TransactionController {
     }
 
     @GetMapping("/{transactionId}")
-    public ResponseEntity<ApiResponse<TransactionResponse>> getTransactionById(
-            @PathVariable String transactionId,
-            @TokenRoomId String tokenRoomId) {
-
-        TransactionResponse tx = transactionService.getByIdForRoom(transactionId, tokenRoomId);
+    public ResponseEntity<ApiResponse<Object>> getTransactionById(@PathVariable String transactionId) {
+        TransactionResponse tx = transactionService.getById(transactionId);
         return ResponseEntity.ok(ApiResponse.ok("Transaction found", tx));
     }
 
@@ -58,11 +54,10 @@ public class TransactionController {
     }
 
     @PostMapping("/{roomId}")
-    public ResponseEntity<ApiResponse<Object>> reserve(
+    public ResponseEntity<ApiResponse<TransactionResponse>> reserve(
             @PathVariable String roomId,
             @TokenRoomId String tokenRoomId,
-            @RequestBody @Valid ReservationCreateRequest req,
-            @RequestHeader("Authorization") String authHeader) {
+            @RequestBody @Valid ReservationCreateRequest req) {
 
         if (!roomId.equals(tokenRoomId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Token not valid for this room");
@@ -73,12 +68,10 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{transactionId}")
-    public ResponseEntity<ApiResponse<Void>> deleteTransaction(
-            @PathVariable String transactionId,
-            @TokenRoomId String tokenRoomId) {
+    public ResponseEntity<ApiResponse<Object>> deleteTransaction(@PathVariable String transactionId) {
 
-        transactionService.deleteByIdForRoom(transactionId, tokenRoomId);
+        transactionService.deleteById(transactionId);
         return ResponseEntity.ok(ApiResponse.ok("Transaction deleted successfully", null));
-
     }
+
 }

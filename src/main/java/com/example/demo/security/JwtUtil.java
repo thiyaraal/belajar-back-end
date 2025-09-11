@@ -9,7 +9,8 @@ import javax.crypto.SecretKey;
 public class JwtUtil {
     private static final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(
             "my-super-secret-key-which-should-be-long".getBytes());
-    private static final long EXPIRATION_MS = 1000L * 60 * 30;
+
+    private static final long EXPIRATION_MS = 1000L * 60 * 1;
 
     public static String generateToken(String roomId) {
         long now = System.currentTimeMillis();
